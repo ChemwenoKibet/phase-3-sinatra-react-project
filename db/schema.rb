@@ -10,12 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2023_03_01_190416) do
+ActiveRecord::Schema.define(version: 2023_03_01_223552) do
 
   create_table "pets", force: :cascade do |t|
     t.string "name"
     t.string "breed"
     t.integer "age"
+    t.integer "user_id", null: false
+    t.index ["user_id"], name: "index_pets_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -24,4 +26,5 @@ ActiveRecord::Schema.define(version: 2023_03_01_190416) do
     t.integer "phone_number"
   end
 
+  add_foreign_key "pets", "users"
 end
