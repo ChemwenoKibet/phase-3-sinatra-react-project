@@ -66,7 +66,7 @@ class ApplicationController < Sinatra::Base
       request.body.rewind
       data = JSON.parse(request.body.read)
       pet[:age] = data['age']
-      { message: "Pet with id #{id} age updated successfully" }.to_json
+      { message: "Pet with id #{id} age updated successfully", data: pet }.to_json
     else
       halt 404, { error: "Pet with id #{id} not found" }.to_json
     end
