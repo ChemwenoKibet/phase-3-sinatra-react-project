@@ -31,15 +31,21 @@ class ApplicationController < Sinatra::Base
 
   #add new pets
   post '/pets/addpet' do
-    request.body.rewind
-    data = JSON.parse(request.body.read)
-    new_pet = Pet.new(data['id'], data['name'], data['age'], data['breed'])
-    pets.push(new_pet)
-    { message: "Pet added successfully" }.to_json
+    begin
+      request.body.rewind
+      data = JSON.parse(request.body.read)
+      pet = Pet.new(name: data['name'], breed: data['breed'], age: data['age'], user_id: data['user_id'])
+    
+      if pet.save
+        { message: "Pet with id #{pet.id} created successfully", data: pet }.to_json
+      else
+        halt 500, { error: "Failed to create pet" }.to_json
+      end
+    rescue => e
+      halt 500, { error: e.message }.to_json
+    end
   end
   
-  
-
   #view all new pets added
   get "/pets/newpets" do
     pets = Pet.all
@@ -74,15 +80,19 @@ class ApplicationController < Sinatra::Base
   end
   
   #delete new pets
-  delete '/pets/deletepets/:id' do 
-    user = User.find_by(id: params[:id])
-    user.destroy
-    user.to_json
+  delete '/pets/deletepets/:id' do |id|
+    pet = Pet.find_by(id: id)
+  
+    if pet
+      pet.destroy
+      { message: "Pet with id #{id} deleted successfully" }.to_json
+    else
+      halt 404, { error: "Pet with id #{id} not found" }.to_json
+    end
   end
 
-
   #remove details of new pets added
-  delete '/pets/:age' do
+  delete '/pets/' do
     pet = Pet.find_by(age: params[:age])
     pet.update(age: nil)
   end
