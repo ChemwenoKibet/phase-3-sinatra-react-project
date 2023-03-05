@@ -30,14 +30,15 @@ class ApplicationController < Sinatra::Base
   end  
 
   #add new pets
-  post "/pets/addpet/:id" do
-    new_pet = Pet.find(params[:id]).pets.create(
-      name: params[:name], 
-      breed: params[:breed],
-      age: params[:age]
-    )
-    new_pet.to_json
+  post '/pets/addpet' do
+    request.body.rewind
+    data = JSON.parse(request.body.read)
+    new_pet = Pet.new(data['id'], data['name'], data['age'], data['breed'])
+    pets.push(new_pet)
+    { message: "Pet added successfully" }.to_json
   end
+  
+  
 
   #view all new pets added
   get "/pets/newpets" do
@@ -58,14 +59,14 @@ class ApplicationController < Sinatra::Base
   end
 
 
-  #update age of new pet added
+  #update age of new pet added 
   patch '/pets/:id/update_age' do |id|
     pet = Pet.find { |p| p[:id] == id.to_i }
   
     if pet
       request.body.rewind
       data = JSON.parse(request.body.read)
-      pet[:age] = data['age']
+      pet.update(age: data['age']) # This line updates the age in the database
       { message: "Pet with id #{id} age updated successfully", data: pet }.to_json
     else
       halt 404, { error: "Pet with id #{id} not found" }.to_json
@@ -73,7 +74,7 @@ class ApplicationController < Sinatra::Base
   end
   
   #delete new pets
-  delete '/users/:id' do 
+  delete '/pets/deletepets/:id' do 
     user = User.find_by(id: params[:id])
     user.destroy
     user.to_json
