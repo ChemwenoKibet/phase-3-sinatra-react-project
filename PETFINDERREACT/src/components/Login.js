@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () => {
   const [username, setUsername] = useState('');
@@ -12,6 +13,7 @@ const LoginForm = () => {
     setPassword(event.target.value);
   };
 
+  const navigate = useNavigate()
   const handleSubmit = (event) => {
     event.preventDefault();
 
@@ -26,6 +28,7 @@ const LoginForm = () => {
     .then(response => response.json())
     .then(data => console.log(data))
     .catch(error => console.error(error));
+    navigate('/pets');
   };
 
   return (
