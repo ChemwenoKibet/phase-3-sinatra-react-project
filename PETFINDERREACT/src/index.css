@@ -61,3 +61,7 @@ button {
 button:hover {
   background-color: #0052D6;
 }
+
+.centered {
+  text-align: center;
+}
