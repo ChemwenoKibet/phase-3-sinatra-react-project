@@ -18,7 +18,7 @@ const LoginForm = () => {
     event.preventDefault();
 
     // Send login data to server for authentication
-    fetch('/login', {
+    fetch('/login', { //make sure you have /login 
       method: 'POST',
       body: JSON.stringify({ username, password }),
       headers: {
@@ -33,6 +33,7 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <h1>Welcome To AdoptAPet App</h1>
       <h2>Login</h2>
       <div>
         <label htmlFor="username">Username:</label>
@@ -46,5 +47,7 @@ const LoginForm = () => {
     </form>
   );
 };
+
+
 
 export default LoginForm;

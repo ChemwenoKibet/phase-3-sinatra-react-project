@@ -5,8 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: url('/home/user/Development/code/phase3/PET-FINDER/phase-3-sinatra-react-project/petfinderreact/998099.png');
   background-size: cover;
+  background-color:darkslategrey
 }
 
 code {

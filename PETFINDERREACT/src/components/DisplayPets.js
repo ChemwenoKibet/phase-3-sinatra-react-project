@@ -1,9 +1,117 @@
+// import { useEffect, useState } from 'react';
+// import axios from 'axios';
+
+// const DisplayPets = () => {
+//   const [pets, setPets] = useState([]);
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       const result = await axios.get('http://localhost:9292/pets');
+//       setPets(result.data);
+//     };
+//     fetchData();
+//   }, []);
+
+//   return (
+//     <div>
+//       <nav>
+//       <button onClick={() => { window.location.href = 'http://localhost:3000/login' }}>Logout</button>
+
+//         <br />
+//         <form>
+//           <label htmlFor="search">Search:</label>
+//           <input type="text" />
+//           <button type="submit">Search</button>
+//         </form>
+//         <button>Delete Pet</button>
+//       </nav>
+
+//       {pets.map((pet) => (
+//         <div key={pet.id}>
+//           <p>{pet.name}</p>
+//           <p>{pet.breed}</p>
+//           <p>{pet.age}</p>
+//           <button>Add Pet</button>
+//           <br />
+//         </div>
+//       ))}
+//     </div>
+//   );
+// };
+
+// export default DisplayPets;
+
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+
 const DisplayPets = () => {
-    return (
-        <div>
+  const [pets, setPets] = useState([]);
+  const [newPetName, setNewPetName] = useState('');
+  const [newPetBreed, setNewPetBreed] = useState('');
+  const [newPetAge, setNewPetAge] = useState('');
 
+  const handleAddPet = async (e) => {
+    e.preventDefault(); // prevent default form submission behavior
+
+    const result = await axios.post('http://localhost:9292/pets/addpet', {
+      name: newPetName,
+      breed: newPetBreed,
+      age: newPetAge
+    });
+
+    setPets([...pets, result.data]); // add the new pet to the pets array state
+    setNewPetName(''); // clear the input fields
+    setNewPetBreed('');
+    setNewPetAge('');
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await axios.get('http://localhost:9292/pets');
+      setPets(result.data);
+    };
+    fetchData();
+  }, []);
+
+  return (
+    <div>
+      <nav>
+        <button onClick={() => { window.location.href = 'http://localhost:3000/login' }}>Logout</button>
+        <br />
+        <form>
+          <label htmlFor="search">Search:</label>
+          <input type="text" />
+          <button type="submit">Search</button>
+        </form>
+        <button>Delete Pet</button>
+      </nav>
+
+      {pets.map((pet) => (
+        <div key={pet.id}>
+          <p>{pet.name}</p>
+          <p>{pet.breed}</p>
+          <p>{pet.age}</p>
+          <br />
         </div>
-    )
-}
+      ))}
 
-export default DisplayPets
+      <div>
+        <h2>Add a new pet:</h2>
+        <form onSubmit={handleAddPet}>
+          <label htmlFor="newPetName">Name:</label>
+          <input type="text" id="newPetName" value={newPetName} onChange={(e) => setNewPetName(e.target.value)} />
+          <label htmlFor="newPetBreed">Breed:</label>
+          <input type="text" id="newPetBreed" value={newPetBreed} onChange={(e) => setNewPetBreed(e.target.value)} />
+          <label htmlFor="newPetAge">Age:</label>
+          <input type="number" id="newPetAge" value={newPetAge} onChange={(e) => setNewPetAge(e.target.value)} />
+          <button type="submit">Add Pet</button>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default DisplayPets;
+
+
+
